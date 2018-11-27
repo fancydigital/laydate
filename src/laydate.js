@@ -99,7 +99,8 @@
   }
 
   //字符常量
-  ,MOD_NAME = 'laydate', ELEM = '.layui-laydate', THIS = 'layui-this', SHOW = 'layui-show', HIDE = 'layui-hide', DISABLED = 'laydate-disabled', TIPS_OUT = '开始日期超出了结束日期<br>建议重新选择', LIMIT_YEAR = [100, 200000]
+  ,MOD_NAME = 'laydate', ELEM = '.layui-laydate', THIS = 'layui-this', SHOW = 'layui-show', HIDE = 'layui-hide', 
+  DISABLED = 'laydate-disabled', TIPS_OUT = '开始日期超出了结束日期<br>建议重新选择', LIMIT_YEAR = [100, 200000]
   
   ,ELEM_STATIC = 'layui-laydate-static', ELEM_LIST = 'layui-laydate-list', ELEM_SELECTED = 'laydate-selected', ELEM_HINT = 'layui-laydate-hint', ELEM_PREV = 'laydate-day-prev', ELEM_NEXT = 'laydate-day-next', ELEM_FOOTER = 'layui-laydate-footer', ELEM_CONFIRM = '.laydate-btns-confirm', ELEM_TIME_TEXT = 'laydate-time-text', ELEM_TIME_BTN = '.laydate-btns-time'
   
@@ -544,6 +545,7 @@
     
     that.elemID = 'layui-laydate'+ options.elem.attr('lay-key');
     
+    // 这里会导致，elem未创建 后面 events对节点操作会报错
     if(options.show || isStatic) that.render();
     isStatic || that.events();
     
@@ -794,7 +796,7 @@
     
     div.innerHTML = content || '';
     lay(that.elem).find('.'+ ELEM_HINT).remove();
-    that.elem.appendChild(div);
+    that.elem && that.elem.appendChild(div);
 
     clearTimeout(that.hinTimer);
     that.hinTimer = setTimeout(function(){

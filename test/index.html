@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>laydate</title>
+	<script type="text/javascript" src="../dist/laydate.js"></script>
+</head>
+<body>
+	<fieldset>
+	    <legend>示例一</legend>
+	    <input type="text" id="date">
+	    <script type="text/javascript">
+	    	laydate.render({
+	    	  elem: '#date'
+	    	});
+	    </script>
+ 	</fieldset>
+	<fieldset>
+	    <legend>范围</legend>
+	    <input type="text" id="test6">
+	    <script type="text/javascript">
+	    	laydate.render({
+	    	  elem: '#test6',
+	    	  range:true
+	    	});
+	    </script>
+ 	</fieldset>
+ 	<fieldset>
+	    <legend>其他</legend>
+	    <input type="text" id="test7">
+	    <script type="text/javascript">
+	    	//日期时间范围
+	    	laydate.render({
+	    	  elem: '#test7'
+	    	  ,type: 'datetime'
+	    	  ,range: true
+	    	}); 
+	    </script>
+ 	</fieldset>
+</body>
+</html>

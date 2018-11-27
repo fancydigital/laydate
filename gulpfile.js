@@ -5,10 +5,8 @@
 var pkg = require('./package.json');
 
 var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var minify = require('gulp-minify-css');
-var rename = require('gulp-rename');
-var header = require('gulp-header');
+var $ = require('gulp-load-plugins')();
+
 var del = require('del');
 
 //发行版本目录
@@ -16,21 +14,23 @@ var releaseDir = './release/zip/layDate-v' + pkg.version;
 var release = releaseDir + '/laydate';
 
 var task = {
-  laydate: function() {
-    gulp.src('./src/**/*.css')
-    .pipe(minify({
+  script: function() {
+    return gulp.src('./src/laydate.js').pipe($.uglify())
+     .pipe($.header('/*! <%= pkg.realname %>-v<%= pkg.version %> <%= pkg.description %> <%= pkg.license %> License  <%= pkg.homepage %>  By <%= pkg.author %> */\n ;', {pkg: pkg}))
+    .pipe(gulp.dest('./dist'));
+    
+  },
+  style:function(){
+    return gulp.src(['./src/**/*.less','!./src/**/_*.less'])
+    .pipe($.less())
+    .pipe($.minifyCss({
       compatibility: 'ie7'
     }))
-    .pipe(header('/*! <%= pkg.realname %>-v<%= pkg.version %> <%= pkg.description %> <%= pkg.license %> License  <%= pkg.homepage %>  By <%= pkg.author %> */\n', {pkg: pkg}))
+    .pipe($.header('/*! <%= pkg.realname %>-v<%= pkg.version %> <%= pkg.description %> <%= pkg.license %> License  <%= pkg.homepage %>  By <%= pkg.author %> */\n', {pkg: pkg}))
     .pipe(gulp.dest('./dist'));
-    
-    return gulp.src('./src/laydate.js').pipe(uglify())
-     .pipe(header('/*! <%= pkg.realname %>-v<%= pkg.version %> <%= pkg.description %> <%= pkg.license %> License  <%= pkg.homepage %>  By <%= pkg.author %> */\n ;', {pkg: pkg}))
-    .pipe(gulp.dest('./dist'));
-    
   }
   ,other: function(){
-    gulp.src('./src/**/font/*').pipe(rename({}))
+    gulp.src('./src/**/font/*').pipe($.rename({}))
     .pipe(gulp.dest('./dist'));
   }
 };
@@ -53,6 +53,15 @@ gulp.task('r', ['clearZip'], function(){
   return gulp.src('./dist/**/*')
   .pipe(gulp.dest(releaseDir + '/laydate'))
 });
+
+gulp.task('dev',['clear'],function(){
+  for(var key in task){
+    task[key]();
+  }
+
+  gulp.watch('./src/laydate.js',task.script)
+  gulp.watch('./src/**/*.less',task.style)
+})
 
 //全部
 gulp.task('default', ['clear'], function(){
